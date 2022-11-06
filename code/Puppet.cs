@@ -1,9 +1,6 @@
 ﻿using Sandbox;
-using Sandbox.UI.Construct;
 using System;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 // - SFMDX -
 // Source Filmmaker in S&box
@@ -31,35 +28,18 @@ using System.Threading.Tasks;
 
 namespace SFMDX;
 
-/// <summary>
-/// This is your game class. This is an entity that is created serverside when
-/// the game starts, and is replicated to the client. 
-/// 
-/// You can use this to create things like HUDs and declare which player class
-/// to use for spawned players.
-/// </summary>
-public partial class MyGame : Sandbox.Game
+// <summary>
+// Puppet clientside model
+// This is what displays models in scenes
+// </summary>
+
+partial class Puppet : ModelEntity
 {
-	public MyGame()
+	public override void Spawn()
 	{
-		if ( IsClient )
-		{
-			// Create the HUD
-			Local.Hud = new EditorHUD();
-		}
-	}
-
-	/// <summary>
-	/// A client has joined the server. Make them a pawn to play with
-	/// </summary>
-	public override void ClientJoined( Client client )
-	{
-		base.ClientJoined( client );
-
-		// Create a pawn for this client to play with
-		// The pawn will spawn at 0, 0, 0 by default
-		// This is to replicate SFM behaviour but can be changed later
-		var pawn = new Pawn();
-		client.Pawn = pawn;
+		base.Spawn();
+		// Never transmit, this is strictly a clientside entity
+		Transmit = TransmitType.Never;
+		Predictable = false;
 	}
 }
